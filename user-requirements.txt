@@ -1,0 +1,16 @@
+TaskN'Budget
+
+Core Features
+
+Task and Project Management:
+    Create, assign, and track tasks and subtasks.
+    Set deadlines and priorities for tasks.
+    Organize tasks into projects or categories.
+    Implement a calendar view for task deadlines and reminders.
+
+Budget Tracking and Management:
+    Track income and expenses with categories.
+    Set monthly or weekly budget limits.
+    Visualize spending with charts and graphs.
+    Provide insights into spending habits.
+

@@ -1,0 +1,74 @@
+.card-container {
+  display: flex;
+  flex-wrap: wrap; /* Allows cards to wrap to the next line */
+  justify-content: flex-start; /* Aligns cards to the start of the container */
+  align-items: flex-start;
+}
+
+.card {
+  align-self: stretch;
+  flex: 0 0 auto; /* Do not grow, do not shrink, and maintain intrinsic width */
+  margin: 10px; /* Optional: Adds some space between cards */
+  width: 31.5%;
+  min-height: 28vh;
+  background-color: #f3f8ff;
+  border-radius: 15px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center; /* Centers the button horizontally */
+  margin-bottom: 20px; /* Optional: Adds some space below the button */
+}
+
+mat-card-title {
+  font-size: 1rem; /* Example size, adjust as needed */
+  font-weight: 500;
+}
+
+p {
+  margin: 0;
+}
+
+.card-content {
+  margin-top: 1rem;
+}
+
+.flex-container {
+  display: flex;
+}
+
+.card-label {
+  color: rgba(0, 0, 0, 0.54);
+  font-weight: 400;
+  margin-right: 10px;
+}
+
+.notes {
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+.pay-type {
+  font-weight: 500;
+}
+
+.empty-card {
+  display: flex;
+  align-items: center; /* Center the button vertically */
+  justify-content: center; /* Center the button horizontally */
+  background-color: white;
+}
+
+mat-card-actions {
+  flex-shrink: 0; /* Ensures actions don't grow or shrink */
+  margin-top: auto; /* Pushes actions to the bottom */
+}
+
+.green-text {
+  color: green;
+}
+
+.blue-text {
+  color: #3f51b5;
+}

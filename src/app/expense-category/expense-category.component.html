@@ -1,0 +1,66 @@
+<div class="card-container">
+  <mat-card class="card" *ngFor="let data of expenseData">
+    <mat-card-header>
+      <mat-card-title>{{ data.name }}</mat-card-title>
+      <mat-card-subtitle
+        class="pay-type"
+        [ngClass]="{
+          'green-text': data.payType === paytypes.FullPay,
+          'blue-text': data.payType === paytypes.ScheduledPay
+        }"
+        >{{ data.payType }}
+        <span *ngIf="data.balanceType">
+          - {{ data.balanceType }}</span
+        ></mat-card-subtitle
+      >
+    </mat-card-header>
+
+    <mat-card-content class="card-content">
+      <div class="flex-container">
+        <p class="card-label">Due Date:</p>
+        <p>{{ data.dueDate | date : "fullDate" }}</p>
+      </div>
+
+      <div class="flex-container">
+        <p class="card-label">Due Amount:</p>
+        <p>{{ data.amount | currency : "USD" : "symbol" : "1.2-2" }}</p>
+      </div>
+
+      <div class="flex-container">
+        <p class="card-label">Payment Source:</p>
+        <p>{{ data.paymentSource }}</p>
+      </div>
+
+      <div class="flex-container">
+        <p class="card-label">Payment Date:</p>
+        <p>{{ data.paymentDate | date : "fullDate" }}</p>
+      </div>
+
+      <div class="flex-container">
+        <p class="card-label">Payment Amount:</p>
+        <p>{{ data.paymentAmount | currency : "USD" : "symbol" : "1.2-2" }}</p>
+      </div>
+
+      @if(data.note) {
+      <div class="flex-container">
+        <p class="notes">{{ data.note }}</p>
+      </div>
+      }
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button mat-icon-button color="primary" (click)="editExpense(data)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button color="warn" (click)="deleteExpense(data)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <!-- empty card to add -->
+  <mat-card class="card empty-card">
+    <button mat-mini-fab color="primary" (click)="addExpense()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </mat-card>
+</div>

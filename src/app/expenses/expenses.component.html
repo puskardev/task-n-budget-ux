@@ -1,0 +1,58 @@
+<mat-expansion-panel
+  (opened)="panelOpenState = true"
+  (closed)="panelOpenState = false"
+>
+  <mat-expansion-panel-header>
+    <mat-panel-title> Expenses </mat-panel-title>
+    <mat-panel-description>
+      $ 5,000 {{ panelOpenState ? "open" : "closed" }}
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <mat-card>
+    <mat-accordion>
+      <!-- Misc Panel -->
+      <mat-expansion-panel
+        (opened)="panelOpenState = true"
+        (closed)="panelOpenState = false"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title> Misc </mat-panel-title>
+          <mat-panel-description> $ 2,000 </mat-panel-description>
+        </mat-expansion-panel-header>
+        <app-expense-category
+          [categoryType]="categoryTypes.Misc"
+        ></app-expense-category>
+      </mat-expansion-panel>
+
+      <!-- Credit Cards Panel -->
+      <mat-expansion-panel
+        (opened)="panelOpenState = true"
+        (closed)="panelOpenState = false"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title> Credit Cards </mat-panel-title>
+          <mat-panel-description> $ 1,500 </mat-panel-description>
+        </mat-expansion-panel-header>
+        <app-expense-category
+          [categoryType]="categoryTypes.CreditCards"
+        ></app-expense-category>
+      </mat-expansion-panel>
+
+      <!-- Subscriptions panel -->
+      <mat-expansion-panel
+        (opened)="panelOpenState = true"
+        (closed)="panelOpenState = false"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title> Subscriptions </mat-panel-title>
+          <mat-panel-description>
+            $ 5,000 {{ panelOpenState ? "open" : "closed" }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <app-expense-category
+          [categoryType]="categoryTypes.CreditCards"
+        ></app-expense-category>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-card>
+</mat-expansion-panel>

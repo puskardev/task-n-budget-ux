@@ -2,8 +2,8 @@ export interface Expense {
   expenseId: number;
   name: string;
   amount: number | null;
-  dueDate?: string | Date;
-  paymentDate?: string | Date;
+  dueDate?: any;
+  paymentDate?: any;
   paymentAmount?: number | null;
   paymentSource?: string;
   payType?: string; 

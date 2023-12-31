@@ -11,7 +11,6 @@
   margin: 10px; /* Optional: Adds some space between cards */
   width: 31.5%;
   min-height: 28vh;
-  background-color: #f3f8ff;
   border-radius: 15px;
 }
 
@@ -71,4 +70,16 @@ mat-card-actions {
 
 .blue-text {
   color: #3f51b5;
+}
+
+.misc {
+  background-color: #eef5ff;
+}
+
+.credit-card {
+  background-color: #eeffef;
+}
+
+.subscription {
+  background-color: #FFF5EE;
 }

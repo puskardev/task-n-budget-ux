@@ -1,17 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import {
   EditExpenseComponent,
   openEditCourseDialog,
-} from '../edit-expense/edit-expense.component';
-import { Expense, emptyExpense } from '../model/expense';
-import { MOCK_EXPENSE_DATA } from '../model/expense-mock';
+} from '@Components/edit-expense/edit-expense.component';
+import { ExpenseCategoryType } from '@Enums/category-type';
+import { PayType } from '@Enums/expense-enum';
+import { Expense, emptyExpense } from '@Models/expense';
+import { MOCK_EXPENSE_DATA } from '@Models/expense-mock';
+import { DateService } from '@Services/date.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { filter } from 'rxjs';
-import { DateService } from '../service/date.service';
-import { PayType } from '../enum/expense-enum';
-import _ from 'lodash';
-import moment from 'moment';
-import { ExpenseCategoryType } from '../enum/category-type';
 
 @Component({
   selector: 'app-expense-category',
@@ -51,17 +49,23 @@ export class ExpenseCategoryComponent implements OnInit {
       expenseId: data.expenseId,
       name: data.name,
       amount: data.amount,
-      dueDate: this.dateService.formatDate(data.dueDate),
+      dueDate: this.validateAndFormatDate(data.dueDate),
       paymentSource: data.paymentSource,
       paymentAmount: data.paymentAmount,
-      paymentDate: this.dateService.formatDate(data.paymentDate),
+      paymentDate: this.validateAndFormatDate(data.paymentDate),
       note: data.note,
       payType: data.payType,
       balanceType: data.balanceType,
       expenseCategoryType: this.categoryType,
     };
-
     return expense;
+  }
+  validateAndFormatDate(date: any): string | null {
+    if (date && !isNaN(new Date(date).valueOf())) {
+      return this.dateService.formatDate(date);
+    } else {
+      return null;
+    }
   }
 
   addExpense() {
@@ -96,5 +100,18 @@ export class ExpenseCategoryComponent implements OnInit {
       }
       console.log(`Dialog result: ${result}`);
     });
+  }
+
+  getCategoryClass() {
+    switch (this.categoryType) {
+      case ExpenseCategoryType.Misc:
+        return 'misc';
+      case ExpenseCategoryType.CreditCards:
+        return 'credit-card';
+      case ExpenseCategoryType.Subscriptions:
+        return 'subscription';
+      default:
+        return '';
+    }
   }
 }

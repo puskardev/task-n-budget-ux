@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'task-n-budget-ux';
+  isSidenavOpen = false;
+
+  toggleSidenav(open: boolean) {
+    this.isSidenavOpen = open;
+  }
 }

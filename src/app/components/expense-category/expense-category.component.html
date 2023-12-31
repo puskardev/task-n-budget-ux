@@ -1,5 +1,9 @@
 <div class="card-container">
-  <mat-card class="card" *ngFor="let data of expenseData">
+  <mat-card
+    class="card"
+    [ngClass]="getCategoryClass()"
+    *ngFor="let data of expenseData"
+  >
     <mat-card-header>
       <mat-card-title>{{ data.name }}</mat-card-title>
       <mat-card-subtitle

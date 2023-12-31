@@ -1,38 +1,48 @@
-import { NgModule } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
-import { HomeComponent } from './home/home.component';
-import { TasksComponent } from './tasks/tasks.component';
-import { BudgetComponent } from './budget/budget.component';
-import { AboutComponent } from './about/about.component';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatCardModule } from '@angular/material/card';
-import { ExpensesComponent } from './expenses/expenses.component';
-import { MatTableModule } from '@angular/material/table';
-import { FormsModule } from '@angular/forms';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+  MomentDateAdapter,
+  MomentDateModule,
+} from '@angular/material-moment-adapter';
 import { MatButtonModule } from '@angular/material/button';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { EditExpenseComponent } from './edit-expense/edit-expense.component';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+  MatNativeDateModule,
+} from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
-import { ExpenseCategoryComponent } from './expense-category/expense-category.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
-
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTableModule } from '@angular/material/table';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { HomeComponent } from '@Components/home/home.component';
+import { TasksComponent } from '@Components/tasks/tasks.component';
+import { BudgetComponent } from '@Components/budget/budget.component';
+import { AboutComponent } from '@Components/about/about.component';
+import { ExpensesComponent } from '@Components/expenses/expenses.component';
+import { EditExpenseComponent } from '@Components/edit-expense/edit-expense.component';
+import { ExpenseCategoryComponent } from '@Components/expense-category/expense-category.component';
+import { DateMonthCalendarComponent } from '@Components/date-month-calendar/date-month-calendar.component';
+import { DATE_MONTH } from './constants/date-month';
 @NgModule({
   declarations: [
     AppComponent,
@@ -43,6 +53,7 @@ import { MatSelectModule } from '@angular/material/select';
     ExpensesComponent,
     EditExpenseComponent,
     ExpenseCategoryComponent,
+    DateMonthCalendarComponent,
   ],
   imports: [
     BrowserModule,
@@ -69,8 +80,17 @@ import { MatSelectModule } from '@angular/material/select';
     ReactiveFormsModule,
     MatRadioModule,
     MatSelectModule,
+    MomentDateModule,
   ],
-  providers: [DatePipe],
+  providers: [
+    DatePipe,
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
+    },
+    { provide: MAT_DATE_FORMATS, useValue: DATE_MONTH },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

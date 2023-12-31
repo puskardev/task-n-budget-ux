@@ -1,16 +1,16 @@
+import { ExpenseCategoryType } from '@Enums/category-type';
+import { BalanceType, PayType } from '@Enums/expense-enum';
+import { Expense } from '@Models/expense';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Expense } from '../model/expense';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
   MatDialogConfig,
   MatDialogRef,
 } from '@angular/material/dialog';
-import { BalanceType, PayType } from '../enum/expense-enum';
-import moment from 'moment';
 import cloneDeep from 'lodash/cloneDeep';
-import { ExpenseCategoryType } from '../enum/category-type';
+import moment from 'moment';
 
 @Component({
   selector: 'app-edit-expense',
@@ -37,7 +37,7 @@ export class EditExpenseComponent implements OnInit {
   balanceTypes: string[] = Object.values(BalanceType);
 
   categoryTypes = ExpenseCategoryType;
-  
+
   constructor(
     private formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public expense: Expense,
@@ -67,7 +67,10 @@ export function openEditCourseDialog(dialog: MatDialog, expense: Expense) {
   let deepCopyExpense = cloneDeep(expense);
 
   deepCopyExpense.dueDate = moment(expense.dueDate, 'YYYY-MM-DD').toDate();
-  deepCopyExpense.paymentDate = moment(expense.paymentDate, 'YYYY-MM-DD').toDate();
+  deepCopyExpense.paymentDate = moment(
+    expense.paymentDate,
+    'YYYY-MM-DD'
+  ).toDate();
 
   config.data = {
     ...deepCopyExpense,

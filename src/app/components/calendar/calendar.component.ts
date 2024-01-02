@@ -1,57 +1,28 @@
+import { EditEventComponent } from '@Components/edit-event/edit-event.component';
+import { EventColors } from '@Constants/calendar-event';
 import {
-  Component,
   ChangeDetectionStrategy,
-  ViewChild,
-  TemplateRef,
+  Component,
 } from '@angular/core';
-import {
-  startOfDay,
-  endOfDay,
-  subDays,
-  addDays,
-  endOfMonth,
-  isSameDay,
-  isSameMonth,
-  addHours,
-} from 'date-fns';
-import { Subject } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   CalendarEvent,
   CalendarEventTimesChangedEvent,
   CalendarView,
 } from 'angular-calendar';
-import { EventColor, EventAction } from 'calendar-utils';
-import { EditEventComponent } from '@Components/edit-event/edit-event.component';
-import { MatDialog } from '@angular/material/dialog';
-import { defaultEventColor } from '@Constants/calendar-event';
-
-const colors: Map<string, EventColor> = new Map([
-  [
-    'red',
-    {
-      primary: '#ad2121',
-      secondary: '#FAE3E3',
-      secondaryText: 'red',
-    },
-  ],
-  [
-    'blue',
-    {
-      primary: '#1e90ff',
-      secondary: '#D1E8FF',
-      secondaryText: 'blue',
-    },
-  ],
-  [
-    'yellow',
-    {
-      primary: '#e3bc08',
-      secondary: '#FDF1BA',
-      secondaryText: 'yellow',
-    },
-  ],
-]);
+import { EventAction, EventColor } from 'calendar-utils';
+import {
+  addDays,
+  addHours,
+  endOfDay,
+  endOfMonth,
+  isSameDay,
+  isSameMonth,
+  startOfDay,
+  subDays,
+} from 'date-fns';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-calendar',
@@ -60,24 +31,15 @@ const colors: Map<string, EventColor> = new Map([
   templateUrl: './calendar.component.html',
 })
 export class CalendarComponent {
-  @ViewChild('modalContent', { static: true })
-  modalContent!: TemplateRef<any>;
-
-  showInput = false;
-  selectedTime: any;
-
   view: CalendarView = CalendarView.Month;
 
   CalendarView = CalendarView;
 
-  color: string = '#FAE3E3';
-
   viewDate: Date = new Date();
 
-  modalData!: {
-    action: string;
-    event: CalendarEvent;
-  };
+  highlightedRows: Set<any> = new Set(); 
+
+  refresh = new Subject<void>();
 
   actions: EventAction[] = [
     {
@@ -97,14 +59,12 @@ export class CalendarComponent {
     },
   ];
 
-  refresh = new Subject<void>();
-
   events: CalendarEvent[] = [
     {
       start: subDays(startOfDay(new Date()), 1),
       end: addDays(new Date(), 1),
       title: 'A 3 day event',
-      color: colors.get('red') as EventColor,
+      color: EventColors.get('red') as EventColor,
       actions: this.actions,
       allDay: true,
       resizable: {
@@ -116,21 +76,21 @@ export class CalendarComponent {
     {
       start: startOfDay(new Date()),
       title: 'An event with no end date',
-      color: colors.get('yellow') as EventColor,
+      color: EventColors.get('yellow') as EventColor,
       actions: this.actions,
     },
     {
       start: subDays(endOfMonth(new Date()), 3),
       end: addDays(endOfMonth(new Date()), 3),
       title: 'A long event that spans 2 months',
-      color: colors.get('blue') as EventColor,
+      color: EventColors.get('blue') as EventColor,
       allDay: true,
     },
     {
       start: addHours(startOfDay(new Date()), 2),
       end: addHours(new Date(), 2),
       title: 'A draggable and resizable event',
-      color: colors.get('yellow') as EventColor,
+      color: EventColors.get('yellow') as EventColor,
       actions: this.actions,
       resizable: {
         beforeStart: true,
@@ -178,25 +138,54 @@ export class CalendarComponent {
 
   handleEvent(action: string, event: CalendarEvent): void {
     console.log(event);
-    this.modalData = { event, action };
-    this.modal.open(this.modalContent, { size: 'lg' });
+
+    // navigate to the event in table.
+    this.highlightedRows.add(event);
+    this.scrollToRow(event);
+    setTimeout(() => this.removeHighlight(event), 3000);
   }
 
-  addEvent(): void {
-    this.events = [
-      ...this.events,
-      {
-        title: 'New event',
-        start: startOfDay(new Date()),
-        end: endOfDay(new Date()),
-        color: colors.get('blue') as EventColor,
-        draggable: true,
-        resizable: {
-          beforeStart: true,
-          afterEnd: true,
-        },
+  navigateToEventsTable(event: CalendarEvent) {
+    this.highlightedRows.add(event);
+    this.scrollToRow(event);
+    setTimeout(() => this.removeHighlight(event), 500);
+  }
+
+  addEvent(start?: Date, end?: Date): void {
+    const newEvent: CalendarEvent = {
+      title: 'New event',
+      start: start ? start : startOfDay(new Date()),
+      end: end ? end : endOfDay(new Date()),
+      color: EventColors.get('default') as EventColor,
+      actions: this.actions,
+      draggable: true,
+      resizable: {
+        beforeStart: true,
+        afterEnd: true,
       },
-    ];
+    };
+
+    this.events = [...this.events, newEvent];
+
+    // navigate to the new event in table.
+    this.highlightedRows.add(newEvent);
+    setTimeout(() => this.scrollToRow(newEvent), 0);
+  }
+
+  scrollToRow(event: CalendarEvent) {
+    const idx = this.events.findIndex((ev) => ev === event);
+    const element = document.getElementById('row' + idx);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  removeHighlight(event: CalendarEvent) {
+    this.highlightedRows.delete(event);
+  }
+
+  onRowClick(event: CalendarEvent) {
+    this.removeHighlight(event);
   }
 
   deleteEvent(eventToDelete: CalendarEvent) {
@@ -213,8 +202,9 @@ export class CalendarComponent {
 
   onTimeClicked(event: any) {
     console.log(event); // Replace with your code
-    this.showInput = true;
-    this.selectedTime = event;
+    const start: Date = event.date;
+    const end: Date = addHours(event.date, 1);
+    this.addEvent(start, end);
   }
 
   openDialog() {
@@ -227,7 +217,7 @@ export class CalendarComponent {
 
   onColorChange(item: string, color: string, index: number) {
     if (!this.events[index].color) {
-      this.events[index].color = defaultEventColor;
+      this.events[index].color = EventColors.get('default') as EventColor;
     }
 
     switch (item) {

@@ -40,7 +40,10 @@ import { AppComponent } from './app.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { EditEventComponent } from './components/edit-event/edit-event.component';
 import { MonthYearPickerComponent } from './components/month-year-picker/month-year-picker.component';
-
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { PieChartComponent } from './components/pie-chart/pie-chart.component';
+import { IncomeComponent } from './components/income/income.component';
+import { BudgetSummaryComponent } from './components/budget-summary/budget-summary.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +58,9 @@ import { MonthYearPickerComponent } from './components/month-year-picker/month-y
     MonthYearPickerComponent,
     CalendarComponent,
     EditEventComponent,
+    PieChartComponent,
+    IncomeComponent,
+    BudgetSummaryComponent,
   ],
   imports: [
     BrowserModule,
@@ -89,6 +95,7 @@ import { MonthYearPickerComponent } from './components/month-year-picker/month-y
     MatButtonToggleModule,
     FlatpickrModule.forRoot(),
     NgxColorsModule,
+    NgxChartsModule,
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent],

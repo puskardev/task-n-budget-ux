@@ -1,0 +1,41 @@
+<mat-expansion-panel
+  (opened)="panelOpenState = true"
+  (closed)="panelOpenState = false"
+>
+  <mat-expansion-panel-header>
+    <mat-panel-title> Income </mat-panel-title>
+    <mat-panel-description>
+      $ 45,000 {{ panelOpenState ? "open" : "closed" }}
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <div class="card-container">
+    <mat-card class="card" *ngFor="let data of incomeData">
+      <mat-card-header>
+        <mat-card-title>{{ data.source }}</mat-card-title>
+        <mat-card-subtitle> {{ data.incomeCategoryType }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content class="card-content">
+        <div class="flex-container">
+          <p class="card-label">Amount:</p>
+          <p>{{ data.amount | currency : "USD" : "symbol" : "1.2-2" }}</p>
+        </div>
+
+        <div class="flex-container">
+          <p class="card-label">Deposit Date:</p>
+          <p>{{ data.depositDate | date : "fullDate" }}</p>
+        </div>
+
+        <div class="flex-container">
+          <p class="card-label">Deposit To:</p>
+          <p>{{ data.depositTo }}</p>
+        </div>
+
+        @if(data.note) {
+        <div class="flex-container">
+          <p class="notes">{{ data.note }}</p>
+        </div>
+        }
+      </mat-card-content>
+    </mat-card>
+  </div>
+</mat-expansion-panel>

@@ -12,12 +12,11 @@
   width: 31.5%;
   min-height: 28vh;
   border-radius: 15px;
+  background-color: #eeffef;
 }
 
-.button-container {
-  display: flex;
-  justify-content: center; /* Centers the button horizontally */
-  margin-bottom: 20px; /* Optional: Adds some space below the button */
+.card-content {
+  margin-top: 1rem;
 }
 
 mat-card-title {
@@ -46,40 +45,4 @@ p {
 .notes {
   margin-top: 0.5rem;
   font-style: italic;
-}
-
-.pay-type {
-  font-weight: 500;
-}
-
-.empty-card {
-  display: flex;
-  align-items: center; /* Center the button vertically */
-  justify-content: center; /* Center the button horizontally */
-  background-color: white;
-}
-
-mat-card-actions {
-  flex-shrink: 0; /* Ensures actions don't grow or shrink */
-  margin-top: auto; /* Pushes actions to the bottom */
-}
-
-.green-text {
-  color: green;
-}
-
-.blue-text {
-  color: #3f51b5;
-}
-
-.misc {
-  background-color: #eef5ff;
-}
-
-.credit-card {
-  background-color: #ffffec;
-}
-
-.subscription {
-  background-color: #fff5ee;
 }

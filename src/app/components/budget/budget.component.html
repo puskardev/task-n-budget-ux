@@ -2,28 +2,10 @@
   <div class="calendar">
     <app-month-year-picker></app-month-year-picker>
   </div>
-
   <mat-card class="mat-card-width">
     <mat-accordion>
-      <mat-expansion-panel hideToggle>
-        <mat-expansion-panel-header>
-          <mat-panel-title> Savings </mat-panel-title>
-          <mat-panel-description> $5000 </mat-panel-description>
-        </mat-expansion-panel-header>
-        <p>Total Savings -> $6,500</p>
-      </mat-expansion-panel>
-      <mat-expansion-panel
-        (opened)="panelOpenState = true"
-        (closed)="panelOpenState = false"
-      >
-        <mat-expansion-panel-header>
-          <mat-panel-title> Income </mat-panel-title>
-          <mat-panel-description>
-            $ 45,000 {{ panelOpenState ? "open" : "closed" }}
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-      </mat-expansion-panel>
-
+      <app-budget-summary></app-budget-summary>
+      <app-income></app-income>
       <app-expenses></app-expenses>
     </mat-accordion>
   </mat-card>

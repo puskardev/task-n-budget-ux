@@ -45,6 +45,8 @@ import { PieChartComponent } from './components/pie-chart/pie-chart.component';
 import { IncomeComponent } from './components/income/income.component';
 import { BudgetSummaryComponent } from './components/budget-summary/budget-summary.component';
 import { EditIncomeComponent } from './components/edit-income/edit-income.component';
+import { LoginComponent } from './components/login/login.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -63,10 +65,12 @@ import { EditIncomeComponent } from './components/edit-income/edit-income.compon
     IncomeComponent,
     BudgetSummaryComponent,
     EditIncomeComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     BrowserAnimationsModule,
     MatSlideToggleModule,
     MatSidenavModule,

@@ -1,0 +1,39 @@
+<div class="card-container">
+  <mat-card class="mat-elevation-z24 card">
+    <mat-card-title
+      ><mat-icon class="large-icon" color="primary"
+        >account_circle</mat-icon
+      ></mat-card-title
+    >
+    <mat-card-content class="card-content">
+      <form>
+        <mat-form-field appearance="fill" class="input-field">
+          <mat-label>Username</mat-label>
+          <input
+            matInput
+            [(ngModel)]="username"
+            name="username"
+            placeholder="Enter your username"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="input-field">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            type="password"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="Enter your password"
+          />
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+
+    <div class="login-button">
+      <button mat-raised-button color="primary" (click)="handleLogin()">
+        Login
+      </button>
+    </div>
+  </mat-card>
+</div>

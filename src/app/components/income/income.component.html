@@ -5,7 +5,8 @@
   <mat-expansion-panel-header>
     <mat-panel-title> Income </mat-panel-title>
     <mat-panel-description>
-      $ 45,000 {{ panelOpenState ? "open" : "closed" }}
+      {{ totalIncome | currency : "USD" : "symbol" : "1.2-2"
+      }}{{ panelOpenState ? " - Total" : "" }}
     </mat-panel-description>
   </mat-expansion-panel-header>
   <div class="card-container">
@@ -36,6 +37,20 @@
         </div>
         }
       </mat-card-content>
+      <mat-card-actions align="end">
+        <button mat-icon-button color="primary" (click)="editIncome(data)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deleteIncome(data)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="card empty-card">
+      <button mat-mini-fab color="primary" (click)="addIncome()">
+        <mat-icon>add</mat-icon>
+      </button>
     </mat-card>
   </div>
 </mat-expansion-panel>

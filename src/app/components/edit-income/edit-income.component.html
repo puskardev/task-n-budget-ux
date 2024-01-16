@@ -1,0 +1,75 @@
+<mat-dialog-content class="mat-typography">
+  <div class="form-fields-container">
+    <form [formGroup]="form">
+      <div class="form-row">
+        <mat-form-field class="form-field">
+          <mat-label>Source</mat-label>
+          <input
+            matInput
+            placeholder="Ex. Paycheck from .."
+            formControlName="source"
+          />
+        </mat-form-field>
+
+        <mat-form-field class="form-field">
+          <mat-label>Type</mat-label>
+          <input
+            matInput
+            placeholder="Ex. Salary.."
+            formControlName="incomeCategoryType"
+          />
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field class="form-field">
+          <mat-label>Payment Amount</mat-label>
+          <input matInput formControlName="amount" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Deposit Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="depositDatePicker"
+            formControlName="depositDate"
+          />
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="depositDatePicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #depositDatePicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field class="notes-full-width">
+        <mat-label>Notes</mat-label>
+        <textarea
+          matInput
+          placeholder="Add a note.."
+          formControlName="note"
+        ></textarea>
+      </mat-form-field>
+    </form>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+  <button
+    mat-raised-button
+    color="warn"
+    class="button-margin"
+    mat-dialog-close
+    (click)="cancel()"
+  >
+    Cancel
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    [mat-dialog-close]="true"
+    cdkFocusInitial
+    (click)="save()"
+  >
+    Save
+  </button>
+</mat-dialog-actions>

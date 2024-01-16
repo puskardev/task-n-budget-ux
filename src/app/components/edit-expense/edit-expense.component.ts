@@ -1,5 +1,5 @@
 import { ExpenseCategoryType } from '@Enums/category-type';
-import { BalanceType, PayType } from '@Enums/expense-enum';
+import { BalanceType, ExpenseType, PayType } from '@Enums/expense-enum';
 import { Expense } from '@Models/expense';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -29,10 +29,17 @@ export class EditExpenseComponent implements OnInit {
     payType: [this.expense.payType],
     note: [this.expense.note],
     balanceType: [this.expense.balanceType],
+    expenseType: [this.expense.expenseType],
   });
 
   checked = false;
 
+  dueLabel =
+    this.expense.expenseType === ExpenseType.Fixed
+      ? 'Due Amount'
+      : 'Amount Spent';
+
+  expenseTypes: string[] = Object.values(ExpenseType);
   payTypes: string[] = Object.values(PayType);
   balanceTypes: string[] = Object.values(BalanceType);
 
@@ -44,7 +51,20 @@ export class EditExpenseComponent implements OnInit {
     private dialogRef: MatDialogRef<EditExpenseComponent>
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.form.get('expenseType')?.valueChanges.subscribe((value) => {
+      this.dueLabel =
+        value === ExpenseType.Fixed ? 'Due Amount' : 'Amount Spent';
+      if (value === ExpenseType.Fixed) {
+        this.form.get('dueDate')?.setValidators(Validators.required);
+        this.form.get('dueDate')?.updateValueAndValidity();
+      } else {
+        this.form.get('dueDate')?.clearValidators();
+        this.form.get('dueDate')?.reset();
+        this.form.get('dueDate')?.updateValueAndValidity();
+      }
+    });
+  }
 
   save() {
     this.dialogRef.close(this.form.value);
@@ -55,7 +75,7 @@ export class EditExpenseComponent implements OnInit {
   }
 }
 
-export function openEditCourseDialog(dialog: MatDialog, expense: Expense) {
+export function openEditExpenseDialog(dialog: MatDialog, expense: Expense) {
   const config = new MatDialogConfig();
 
   config.disableClose = true;

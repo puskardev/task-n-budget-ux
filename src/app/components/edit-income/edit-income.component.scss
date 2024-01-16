@@ -1,0 +1,27 @@
+.form-row {
+  display: flex;
+  margin-bottom: 1.5rem; /* Space below each row */
+  align-content: center;
+  align-items: center;
+}
+
+.form-field {
+  flex: 1; /* Each field takes equal width */
+  margin-right: 1.5rem; /* Space between fields, adjust as needed */
+}
+
+.form-field:last-child {
+  margin-right: 0; /* Removes margin from the last field in the row */
+}
+
+.notes-full-width {
+  width: 100%;
+}
+
+.button-margin {
+  margin-right: 10px;
+}
+
+.radio-row {
+  margin: 0 10px;
+}

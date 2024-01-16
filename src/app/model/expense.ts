@@ -2,6 +2,7 @@ export interface Expense {
   expenseId: number;
   name: string;
   amount: number | null;
+  expenseType?: string;
   dueDate?: any;
   paymentDate?: any;
   paymentAmount?: number | null;
@@ -15,6 +16,7 @@ export interface Expense {
 export const emptyExpense: Expense = {
   expenseId: 500,
   name: 'New Expense',
+  expenseType: 'Fixed',
   amount: null,
   dueDate: '',
   paymentAmount: null,

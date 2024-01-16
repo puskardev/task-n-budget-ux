@@ -42,7 +42,19 @@ p {
   margin-right: 10px;
 }
 
+mat-card-actions {
+  flex-shrink: 0; /* Ensures actions don't grow or shrink */
+  margin-top: auto; /* Pushes actions to the bottom */
+}
+
 .notes {
   margin-top: 0.5rem;
   font-style: italic;
+}
+
+.empty-card {
+  display: flex;
+  align-items: center; /* Center the button vertically */
+  justify-content: center; /* Center the button horizontally */
+  background-color: white;
 }

@@ -1,11 +1,11 @@
 import {
   EditExpenseComponent,
-  openEditCourseDialog,
+  openEditExpenseDialog,
 } from '@Components/edit-expense/edit-expense.component';
 import { ExpenseCategoryType } from '@Enums/category-type';
 import { PayType } from '@Enums/expense-enum';
 import { Expense, emptyExpense } from '@Models/expense';
-import { MOCK_EXPENSE_DATA } from '@Models/expense-mock';
+import { BudgetDetailsService } from '@Services/budget-details.service';
 import { DateService } from '@Services/date.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -18,28 +18,51 @@ import { filter } from 'rxjs';
 })
 export class ExpenseCategoryComponent implements OnInit {
   @Input()
-  categoryType: ExpenseCategoryType = ExpenseCategoryType.Misc;
+  categoryType!: ExpenseCategoryType;
 
-  expenseData: Expense[] = MOCK_EXPENSE_DATA;
+  @Input()
+  expenseData!: Expense[];
+
+  categoryExpenseData: Expense[] = [];
+
+  public get totalExpense(): number {
+    return this.categoryExpenseData.reduce(
+      (acc, expense) => acc + (expense.amount ? expense.amount : 0),
+      0
+    );
+  }
+
+  panelOpenState = false;
 
   paytypes = PayType;
 
-  constructor(private dialog: MatDialog, private dateService: DateService) {}
+  constructor(
+    private dialog: MatDialog,
+    private dateService: DateService,
+    private budgetDetailsService: BudgetDetailsService
+  ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.categoryExpenseData = this.expenseData.filter(
+      (item) => item.expenseCategoryType === this.categoryType
+    );
+  }
 
   editExpense(data: Expense) {
-    openEditCourseDialog(this.dialog, data)
+    openEditExpenseDialog(this.dialog, data)
       .pipe(filter((val) => !!val))
       .subscribe((val) => {
         if (val) {
           console.log(val);
-          this.expenseData = this.expenseData.map((item: Expense) => {
+
+          this.categoryExpenseData = this.categoryExpenseData.map((item: Expense) => {
             if (item.expenseId === val.expenseId) {
               return this.updatedExpense(val);
             }
             return item;
           });
+
+          this.updateExpenseDetails();
         }
       });
   }
@@ -48,10 +71,11 @@ export class ExpenseCategoryComponent implements OnInit {
     const expense: Expense = {
       expenseId: data.expenseId,
       name: data.name,
-      amount: data.amount,
+      expenseType: data.expenseType,
+      amount: Number(data.amount),
       dueDate: this.validateAndFormatDate(data.dueDate),
       paymentSource: data.paymentSource,
-      paymentAmount: data.paymentAmount,
+      paymentAmount: Number(data.paymentAmount),
       paymentDate: this.validateAndFormatDate(data.paymentDate),
       note: data.note,
       payType: data.payType,
@@ -60,6 +84,7 @@ export class ExpenseCategoryComponent implements OnInit {
     };
     return expense;
   }
+
   validateAndFormatDate(date: any): string | null {
     if (date && !isNaN(new Date(date).valueOf())) {
       return this.dateService.formatDate(date);
@@ -72,21 +97,32 @@ export class ExpenseCategoryComponent implements OnInit {
     const data: Expense = emptyExpense;
     data.expenseCategoryType = this.categoryType;
 
-    openEditCourseDialog(this.dialog, data)
+    openEditExpenseDialog(this.dialog, data)
       .pipe(filter((val) => !!val))
       .subscribe((res) => {
         //make API call to presisti - will return the expense ID as well.
         // update expensesData
+        console.log(res);
         const expense: Expense = this.updatedExpense(res);
 
-        this.expenseData.push(expense);
+        this.categoryExpenseData.push(expense);
+
+        this.updateExpenseDetails();
       });
+  }
+  updateExpenseDetails() {
+    this.budgetDetailsService.updateExpenseDetails(
+      this.categoryType,
+      this.totalExpense
+    );
   }
 
   deleteExpense(data: Expense) {
-    this.expenseData = this.expenseData.filter(
+    this.categoryExpenseData = this.expenseData.filter(
       (item: Expense) => item.expenseId !== data.expenseId
     );
+
+    this.updateExpenseDetails();
   }
 
   saveExpense(expense: Expense) {}

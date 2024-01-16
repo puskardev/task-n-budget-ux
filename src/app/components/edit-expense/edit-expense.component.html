@@ -2,16 +2,30 @@
   <div class="form-fields-container">
     <form [formGroup]="form">
       <div class="form-row">
+        <label class="radio-row">Expense type:</label>
+        <mat-radio-group formControlName="expenseType">
+          @for(expenseType of expenseTypes; track expenseType) {
+          <mat-radio-button
+            class="radio-row"
+            color="primary"
+            [value]="expenseType"
+            >{{ expenseType }}</mat-radio-button
+          >
+          }
+        </mat-radio-group>
+      </div>
+      <div class="form-row">
         <mat-form-field class="form-field">
           <mat-label>Name</mat-label>
           <input matInput placeholder="Ex. rent" formControlName="name" />
         </mat-form-field>
 
         <mat-form-field class="form-field">
-          <mat-label>Due Amount</mat-label>
+          <mat-label>{{ dueLabel }}</mat-label>
           <input matInput formControlName="amount" />
         </mat-form-field>
 
+        @if(form.get('expenseType')?.value === 'Fixed') {
         <mat-form-field>
           <mat-label>Due Date</mat-label>
           <input
@@ -26,6 +40,7 @@
           ></mat-datepicker-toggle>
           <mat-datepicker #dueDatePicker></mat-datepicker>
         </mat-form-field>
+        }
       </div>
 
       <div class="form-row">

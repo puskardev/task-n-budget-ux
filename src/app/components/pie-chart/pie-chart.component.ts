@@ -2,6 +2,7 @@ import { Expense } from '@Models/expense';
 import { MOCK_EXPENSE_DATA } from '@Models/expense-mock';
 import { Income } from '@Models/income';
 import { MOCK_INCOME_DATA } from '@Models/income-mock';
+import { BudgetDetailsService } from '@Services/budget-details.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { Color, ScaleType, LegendPosition } from '@swimlane/ngx-charts';
 
@@ -12,43 +13,33 @@ import { Color, ScaleType, LegendPosition } from '@swimlane/ngx-charts';
 })
 export class PieChartComponent implements OnInit {
   @Input()
-  incomeData: Income[] = MOCK_INCOME_DATA;
+  pieChartData: any[] = [];
 
-  @Input()
-  expenseData: Expense[] = MOCK_EXPENSE_DATA;
-
-  chartData: any[] = [];
-
-  constructor() {}
+  constructor(private budgetDetailsService: BudgetDetailsService) {}
 
   ngOnInit(): void {
-    const totalIncome: number = this.incomeData.reduce(
-      (acc, income) => acc + (income.amount ? income.amount : 0),
-      0
-    );
-
-    const totalExpense: number = this.expenseData.reduce(
-      (acc, expense) => acc + (expense.amount ? expense.amount : 0),
-      0
-    );
-
-    const totalSavings: number = totalIncome - totalExpense;
-
-    this.chartData = [
-      {
-        name: 'Income',
-        value: totalIncome,
-      },
-      {
-        name: 'Expense',
-        value: totalExpense,
-      },
-      {
-        name: 'Savings',
-        value: totalSavings,
-      },
-    ];
-
+    this.budgetDetailsService.getBudgetDetails().subscribe((budgetDetails) => {
+      if (budgetDetails) {
+        this.pieChartData = [
+          {
+            name: 'Misc Expenses',
+            value: budgetDetails.totalMiscExpenses,
+          },
+          {
+            name: 'Credit Cards',
+            value: budgetDetails.totalCreditCardExpenses,
+          },
+          {
+            name: 'Subscriptions',
+            value: budgetDetails.totalSubscriptionExpenses,
+          },
+          {
+            name: 'Savings',
+            value: budgetDetails.totalSavings,
+          },
+        ];
+      }
+    });
   }
 
   view: [number, number] = [900, 400];
@@ -74,7 +65,7 @@ export class PieChartComponent implements OnInit {
     name: 'coolthree',
     selectable: true,
     group: 'Ordinal' as ScaleType,
-    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA'],
+    domain: ['#5D9C59', '#DF2E38', '#C7B42C', '#AAAAAA'],
   };
 
   onSelect(event: any) {

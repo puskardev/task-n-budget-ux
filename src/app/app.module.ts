@@ -44,6 +44,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { PieChartComponent } from './components/pie-chart/pie-chart.component';
 import { IncomeComponent } from './components/income/income.component';
 import { BudgetSummaryComponent } from './components/budget-summary/budget-summary.component';
+import { EditIncomeComponent } from './components/edit-income/edit-income.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { BudgetSummaryComponent } from './components/budget-summary/budget-summa
     PieChartComponent,
     IncomeComponent,
     BudgetSummaryComponent,
+    EditIncomeComponent,
   ],
   imports: [
     BrowserModule,

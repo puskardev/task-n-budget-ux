@@ -1,70 +1,92 @@
-<div class="card-container">
-  <mat-card
-    class="card"
-    [ngClass]="getCategoryClass()"
-    *ngFor="let data of expenseData"
-  >
-    <mat-card-header>
-      <mat-card-title>{{ data.name }}</mat-card-title>
-      <mat-card-subtitle
-        class="pay-type"
-        [ngClass]="{
-          'green-text': data.payType === paytypes.FullPay,
-          'blue-text': data.payType === paytypes.ScheduledPay
-        }"
-        >{{ data.payType }}
-        <span *ngIf="data.balanceType">
-          - {{ data.balanceType }}</span
-        ></mat-card-subtitle
-      >
-    </mat-card-header>
+<mat-expansion-panel
+  (opened)="panelOpenState = true"
+  (closed)="panelOpenState = false"
+>
+  <mat-expansion-panel-header>
+    <mat-panel-title> {{ categoryType }} </mat-panel-title>
+    <mat-panel-description>
+      {{ totalExpense | currency : "USD" : "symbol" : "1.2-2"
+      }}{{ panelOpenState ? " - Total" : "" }}
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <div class="card-container">
+    <mat-card
+      class="card"
+      [ngClass]="getCategoryClass()"
+      *ngFor="let data of categoryExpenseData"
+    >
+      <mat-card-header>
+        <mat-card-title>{{ data.name }}</mat-card-title>
+        <mat-card-subtitle
+          class="pay-type"
+          [ngClass]="{
+                  'green-text': data.payType === paytypes.FullPay,
+                  'blue-text': data.payType === paytypes.ScheduledPay,
+                  'yellow-text': data.payType === paytypes.PartialPay,
+                }"
+          >{{ data.payType }}
+          <span *ngIf="data.balanceType">
+            - {{ data.balanceType }}</span
+          ></mat-card-subtitle
+        >
+      </mat-card-header>
 
-    <mat-card-content class="card-content">
-      <div class="flex-container">
-        <p class="card-label">Due Date:</p>
-        <p>{{ data.dueDate | date : "fullDate" }}</p>
-      </div>
+      <mat-card-content class="card-content">
+        @if(data.dueDate && (data.dueDate | date) && data.expenseType ===
+        'Fixed') {
+        <div class="flex-container">
+          <p class="card-label">Due Date:</p>
+          <p>{{ data.dueDate | date : "fullDate" }}</p>
+        </div>
+        }
 
-      <div class="flex-container">
-        <p class="card-label">Due Amount:</p>
-        <p>{{ data.amount | currency : "USD" : "symbol" : "1.2-2" }}</p>
-      </div>
+        <div class="flex-container">
+          @if(data.expenseType === 'Fixed') {
+          <p class="card-label">Due Amount:</p>
+          } @else {
+          <p class="card-label">Amount Spent:</p>
+          }
+          <p>{{ data.amount | currency : "USD" : "symbol" : "1.2-2" }}</p>
+        </div>
 
-      <div class="flex-container">
-        <p class="card-label">Payment Source:</p>
-        <p>{{ data.paymentSource }}</p>
-      </div>
+        <div class="flex-container">
+          <p class="card-label">Payment Source:</p>
+          <p>{{ data.paymentSource }}</p>
+        </div>
 
-      <div class="flex-container">
-        <p class="card-label">Payment Date:</p>
-        <p>{{ data.paymentDate | date : "fullDate" }}</p>
-      </div>
+        <div class="flex-container">
+          <p class="card-label">Payment Date:</p>
+          <p>{{ data.paymentDate | date : "fullDate" }}</p>
+        </div>
 
-      <div class="flex-container">
-        <p class="card-label">Payment Amount:</p>
-        <p>{{ data.paymentAmount | currency : "USD" : "symbol" : "1.2-2" }}</p>
-      </div>
+        <div class="flex-container">
+          <p class="card-label">Payment Amount:</p>
+          <p>
+            {{ data.paymentAmount | currency : "USD" : "symbol" : "1.2-2" }}
+          </p>
+        </div>
 
-      @if(data.note) {
-      <div class="flex-container">
-        <p class="notes">{{ data.note }}</p>
-      </div>
-      }
-    </mat-card-content>
-    <mat-card-actions align="end">
-      <button mat-icon-button color="primary" (click)="editExpense(data)">
-        <mat-icon>edit</mat-icon>
+        @if(data.note) {
+        <div class="flex-container">
+          <p class="notes">{{ data.note }}</p>
+        </div>
+        }
+      </mat-card-content>
+      <mat-card-actions align="end">
+        <button mat-icon-button color="primary" (click)="editExpense(data)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deleteExpense(data)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- empty card to add -->
+    <mat-card class="card empty-card">
+      <button mat-mini-fab color="primary" (click)="addExpense()">
+        <mat-icon>add</mat-icon>
       </button>
-      <button mat-icon-button color="warn" (click)="deleteExpense(data)">
-        <mat-icon>delete</mat-icon>
-      </button>
-    </mat-card-actions>
-  </mat-card>
-
-  <!-- empty card to add -->
-  <mat-card class="card empty-card">
-    <button mat-mini-fab color="primary" (click)="addExpense()">
-      <mat-icon>add</mat-icon>
-    </button>
-  </mat-card>
-</div>
+    </mat-card>
+  </div>
+</mat-expansion-panel>

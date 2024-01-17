@@ -1,0 +1,118 @@
+<div class="card-container">
+  <!-- sign up screen -->
+  @if(!registerComplete) {
+  <mat-card class="mat-elevation-z24 card">
+    <mat-card-title>
+      <mat-icon class="large-icon" color="primary">person_add</mat-icon>
+    </mat-card-title>
+    <mat-card-content class="card-content">
+      <form [formGroup]="signupForm" (ngSubmit)="submit()">
+        <div class="form-container">
+          <mat-form-field appearance="fill" class="form-field">
+            <mat-label>First Name</mat-label>
+            <input
+              matInput
+              placeholder="Enter your first name"
+              formControlName="firstName"
+            />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Last Name</mat-label>
+            <input
+              matInput
+              placeholder="Enter your last name"
+              formControlName="lastName"
+            />
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="fill" class="form-field full-width">
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            type="email"
+            placeholder="Enter your email"
+            formControlName="email"
+          />
+          <mat-error *ngIf="signupForm.get('email')?.invalid">{{
+            getEmailErrorMessage()
+          }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="form-field full-width">
+          <mat-label>Username</mat-label>
+          <input
+            matInput
+            placeholder="Enter your username"
+            formControlName="username"
+          />
+        </mat-form-field>
+
+        <div class="form-container">
+          <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              [type]="hidePassword ? 'password' : 'text'"
+              placeholder="Enter your password"
+              formControlName="password"
+            />
+            <button mat-button matSuffix (click)="togglePasswordVisibility()">
+              <mat-icon>{{
+                hidePassword ? "visibility_off" : "visibility"
+              }}</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Confirm Password</mat-label>
+            <input
+              matInput
+              type="password"
+              placeholder="Confirm your password"
+              formControlName="confirmPassword"
+            />
+          </mat-form-field>
+        </div>
+        <!-- Custom error message for password mismatch -->
+        <div
+          *ngIf="signupForm.errors?.['passwordMismatch'] && (signupForm.get('confirmPassword')?.touched || signupForm.get('confirmPassword')?.dirty)"
+          class="error-message non-form-field"
+        >
+          Passwords do not match
+        </div>
+
+        <div class="non-form-field">
+          <button
+            mat-raised-button
+            color="primary"
+            [disabled]="!signupForm.valid"
+            type="submit"
+          >
+            Sign Up
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+  }
+
+  <!-- register completed -->
+  @if(registerComplete){
+  <div class="register">
+    <mat-card-title class="title">Hi, {{ registeredUser }}</mat-card-title>
+    <div style="display: flex; align-items: center">
+      <mat-card-title class="title" style="margin-right: 5px">
+        Account Created Successfully
+      </mat-card-title>
+      <mat-card-title>
+        <mat-icon class="large-icon" color="primary">task_alt</mat-icon>
+      </mat-card-title>
+    </div>
+    <div style="margin-top: 20px">
+      <button mat-raised-button color="primary" (click)="navigateToLogin()">Proceed to Login</button>
+    </div>
+  </div>
+  }
+</div>

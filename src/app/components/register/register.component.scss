@@ -1,0 +1,67 @@
+.card-container {
+  position: absolute;
+  top: 25%;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.card {
+  margin: 0 20px;
+  border-radius: 15px;
+  height: 475px;
+  width: 540px;
+  display: flex;
+  flex-direction: column; /* This stacks children vertically */
+  align-items: center; /* Centers the button vertically */
+  justify-content: center; /* Centers the button horizontally */
+}
+
+.card-content {
+  margin: 10px;
+}
+
+.form-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-field {
+  flex: 1;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.full-width {
+  width: 75%;
+}
+
+.large-icon {
+  height: 40px;
+  width: 40px;
+  font-size: 40px;
+  margin-top: 10px;
+}
+
+.non-form-field {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+.error-message {
+  color: red; /* or use Angular Material's error color */
+  margin-top: 5px;
+  font-size: 0.75rem;
+}
+
+.title {
+  // color: black;
+  font-size: 24px;
+}
+
+.register {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

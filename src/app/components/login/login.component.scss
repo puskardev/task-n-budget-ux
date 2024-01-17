@@ -16,24 +16,25 @@ mat-form-field {
 }
 
 .card-content {
-  margin-top: 20px;
+  margin: 10px;
 }
 
 .input-field {
   margin-bottom: 10px;
 }
 
-.login-button {
-  margin-top: 20px;
+.action-item {
+  margin-top: 15px;
   display: flex;
-  justify-content: center;
+  flex-direction: column; /* This stacks children vertically */
+  align-items: center; /* Center vertically */
 }
 
 .card {
   margin: 0 20px;
   border-radius: 15px;
-  height: 400px;
-  width: 400px;
+  height: 450px;
+  width: 450px;
   display: flex;
   flex-direction: column; /* This stacks children vertically */
   align-items: center; /* Centers the button vertically */
@@ -45,4 +46,33 @@ mat-form-field {
   height: 40px;
   width: 40px;
   font-size: 40px;
+}
+
+.background {
+  background: linear-gradient(
+      rgba(255, 255, 255, 0.15),
+      /* This is white with 50% opacity */ rgba(255, 255, 255, 0.15)
+    ),
+    url("/assets/images/bg-app.png");
+  height: 100vh; /* Example height */
+  width: 100%; /* Example width */
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative; /* This helps control the absolute positioning of child elements */
+}
+
+.forgot-password {
+  float: right;
+  font-size: 0.8em; 
+}
+
+.divider {
+  width: 88%; /* Adjust the width as needed */
+  height: 2px; /* Adjust the height as needed */
+  background-color: gray; /* Adjust the color as needed */
+  margin: 15px 0 0 0; /* Center the line horizontally */
+}
+
+.create {
+  margin-top: 15px;
 }

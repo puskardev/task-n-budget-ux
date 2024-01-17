@@ -11,18 +11,29 @@ export class LoginComponent implements OnInit {
   username: string = '';
   password: string = '';
 
+  hidePassword: boolean = true;
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {}
 
-  handleLogin() {
-    this.authService.getAuthToken(this.username, this.password).subscribe(
-      (data) => {
-        this.router.navigate(['home']);
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+  onLogin() {
+    this.authService
+      .handleAuthentication(this.username, this.password)
+      .subscribe({
+        next: (data) => {
+          this.router.navigate(['home']);
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      });
+  }
+
+  togglePasswordVisibility(): void {
+    this.hidePassword = !this.hidePassword;
+  }
+
+  register() {
+    this.router.navigate(['/register']);
   }
 }

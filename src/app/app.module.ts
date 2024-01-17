@@ -46,7 +46,11 @@ import { IncomeComponent } from './components/income/income.component';
 import { BudgetSummaryComponent } from './components/budget-summary/budget-summary.component';
 import { EditIncomeComponent } from './components/edit-income/edit-income.component';
 import { LoginComponent } from './components/login/login.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { MenuComponent } from './components/menu/menu.component';
+import {MatDividerModule} from '@angular/material/divider';
+import { RegisterComponent } from './components/register/register.component';
+import { AuthInterceptorService } from '@Services/auth-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -66,6 +70,8 @@ import { HttpClientModule } from '@angular/common/http';
     BudgetSummaryComponent,
     EditIncomeComponent,
     LoginComponent,
+    MenuComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,
@@ -73,6 +79,7 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientModule,
     BrowserAnimationsModule,
     MatSlideToggleModule,
+    MatDividerModule,
     MatSidenavModule,
     MatToolbarModule,
     MatIconModule,
@@ -103,7 +110,7 @@ import { HttpClientModule } from '@angular/common/http';
     NgxColorsModule,
     NgxChartsModule,
   ],
-  providers: [DatePipe],
+  providers: [DatePipe, { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

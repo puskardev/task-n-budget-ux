@@ -1,11 +1,15 @@
 import { openEditIncomeDialog } from '@Components/edit-income/edit-income.component';
 import { Income, emptyIncome } from '@Models/income';
 import { MOCK_INCOME_DATA } from '@Models/income-mock';
-import { BudgetDetailsService } from '@Services/budget-details.service';
-import { DateService } from '@Services/date.service';
-import { Component, OnInit } from '@angular/core';
+import { BudgetDetailsService } from '@Services/budget/budget-details.service';
+import { DateService } from '@Services/date/date.service';
+import { BudgetService } from '@Services/budget/budget.service';
+import { StatusAlertService } from '@Services/status-alert/status-alert.service';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { filter } from 'rxjs';
+import { Budget } from '@Models/budget';
+import { BudgetDetails } from '@Models/budget-details';
 
 @Component({
   selector: 'app-income',
@@ -13,36 +17,45 @@ import { filter } from 'rxjs';
   styleUrl: './income.component.scss',
 })
 export class IncomeComponent implements OnInit {
+  incomeData: Income[] = [];
+
   panelOpenState = false;
 
-  incomeData: Income[] = MOCK_INCOME_DATA;
-
-  public get totalIncome(): number {
-    return this.incomeData.reduce(
-      (acc, income) => acc + (income.amount ? income.amount : 0),
-      0
-    );
-  }
+  totalIncome: number = 0;
 
   constructor(
     private dialog: MatDialog,
     private dateService: DateService,
-    private budgetDetailsService: BudgetDetailsService
+    private budgetService: BudgetService,
+    private statusAlertService: StatusAlertService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.budgetService.getIncomeData().subscribe({
+      next: (data: Income[]) => {
+        this.incomeData = data;
+      },
+      error: (error) => {
+        this.statusAlertService.openAlert('Failed to load income data', 'Close');
+        console.log(error);
+      },
+    });
+
+    this.budgetService.getBudgetDetails().subscribe({
+      next: (data: BudgetDetails) => {
+        this.totalIncome = data.totalIncome;
+      },
+    });
+  }
 
   addIncome() {
     const data: Income = emptyIncome;
     openEditIncomeDialog(this.dialog, data)
       .pipe(filter((val) => !!val))
       .subscribe((res) => {
-        console.log(res);
-        const expense: Income = this.updatedIncome(res);
+        const income: Income = this.getIncome(res);
 
-        this.incomeData.push(expense);
-
-        this.budgetDetailsService.updateIncomeDetails(this.totalIncome);
+        this.budgetService.addIncome(income);
       });
   }
 
@@ -51,28 +64,21 @@ export class IncomeComponent implements OnInit {
       .pipe(filter((val) => !!val))
       .subscribe((val) => {
         if (val) {
-          console.log(val);
-          this.incomeData = this.incomeData.map((item: Income) => {
-            if (item.incomeId === val.incomeId) {
-              return this.updatedIncome(val);
-            }
-            return item;
-          });
-          this.budgetDetailsService.updateIncomeDetails(this.totalIncome);
+          const income: Income = this.getIncome(val);
+
+          this.budgetService.editIncome(income);
         }
       });
   }
 
   deleteIncome(data: Income) {
-    this.incomeData = this.incomeData.filter(
-      (item: Income) => item.incomeId !== data.incomeId
-    );
-    this.budgetDetailsService.updateIncomeDetails(this.totalIncome);
+    this.budgetService.deleteIncome(data.incomeId);
   }
 
-  updatedIncome(data: any): Income {
+  getIncome(data: any): Income {
     const expense: Income = {
       incomeId: data.incomeId,
+      budgetId: this.budgetService.getBudgetId(),
       source: data.source,
       amount: Number(data.amount),
       incomeCategoryType: data.incomeCategoryType,

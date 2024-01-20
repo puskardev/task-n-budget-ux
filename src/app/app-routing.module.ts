@@ -5,7 +5,7 @@ import { BudgetComponent } from './components/budget/budget.component';
 import { AboutComponent } from './components/about/about.component';
 import { TasksComponent } from './components/tasks/tasks.component';
 import { LoginComponent } from '@Components/login/login.component';
-import { authGuard } from '@Services/auth.guard';
+import { authGuard } from '@Services/auth/auth.guard';
 import { RegisterComponent } from '@Components/register/register.component';
 
 const routes: Routes = [

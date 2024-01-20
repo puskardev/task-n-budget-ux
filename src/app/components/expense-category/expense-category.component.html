@@ -5,7 +5,7 @@
   <mat-expansion-panel-header>
     <mat-panel-title> {{ categoryType }} </mat-panel-title>
     <mat-panel-description>
-      {{ totalExpense | currency : "USD" : "symbol" : "1.2-2"
+      {{ categoryTotalExpense | currency : "USD" : "symbol" : "1.2-2"
       }}{{ panelOpenState ? " - Total" : "" }}
     </mat-panel-description>
   </mat-expansion-panel-header>

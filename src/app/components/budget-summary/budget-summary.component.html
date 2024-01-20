@@ -3,6 +3,19 @@
     <mat-panel-title> Summary </mat-panel-title>
   </mat-expansion-panel-header>
   <div class="chart-view">
-    <app-pie-chart [pieChartData]="pieChartData"></app-pie-chart>
+    <ngx-charts-pie-chart
+      [view]="view"
+      [scheme]="colorScheme"
+      [results]="pieChartData"
+      [gradient]="gradient"
+      [legend]="showLegend"
+      [legendPosition]="legendPosition"
+      [legendTitle]="legendTitle"
+      [labels]="showLabels"
+      (select)="onSelect($event)"
+      (activate)="onActivate($event)"
+      (deactivate)="onDeactivate($event)"
+    >
+    </ngx-charts-pie-chart>
   </div>
 </mat-expansion-panel>

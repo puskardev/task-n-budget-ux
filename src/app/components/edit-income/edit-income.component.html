@@ -6,6 +6,7 @@
           <mat-label>Source</mat-label>
           <input
             matInput
+            type="text"
             placeholder="Ex. Paycheck from .."
             formControlName="source"
           />
@@ -15,6 +16,7 @@
           <mat-label>Type</mat-label>
           <input
             matInput
+            type="text"
             placeholder="Ex. Salary.."
             formControlName="incomeCategoryType"
           />
@@ -24,7 +26,17 @@
       <div class="form-row">
         <mat-form-field class="form-field">
           <mat-label>Payment Amount</mat-label>
+          <mat-icon matPrefix>$</mat-icon>
           <input matInput formControlName="amount" />
+        </mat-form-field>
+        <mat-form-field class="form-field">
+          <mat-label>Deposit To</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Ex. Recepient Account.."
+            formControlName="depositTo"
+          />
         </mat-form-field>
         <mat-form-field>
           <mat-label>Deposit Date</mat-label>
@@ -41,7 +53,6 @@
           <mat-datepicker #depositDatePicker></mat-datepicker>
         </mat-form-field>
       </div>
-
       <mat-form-field class="notes-full-width">
         <mat-label>Notes</mat-label>
         <textarea

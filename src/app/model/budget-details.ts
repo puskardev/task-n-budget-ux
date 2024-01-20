@@ -1,4 +1,6 @@
 export interface BudgetDetails {
+  budgetDetailsId?: number;
+  budgetId?: number;
   totalIncome: number;
   totalExpenses: number;
   totalMiscExpenses: number;
@@ -8,6 +10,8 @@ export interface BudgetDetails {
 }
 
 export const emptyBudgetDetails: BudgetDetails = {
+  budgetDetailsId: 0,
+  budgetId: 0,
   totalIncome: 0,
   totalExpenses: 0,
   totalMiscExpenses: 0,

@@ -1,7 +1,10 @@
 <div class="container-page">
   <div class="calendar">
-    <app-month-year-picker></app-month-year-picker>
+    <app-month-year-picker
+      (dateChange)="selectedDate($event)"
+    ></app-month-year-picker>
   </div>
+  @if(loadBudget) {
   <mat-card class="mat-card-width">
     <mat-accordion>
       <app-budget-summary></app-budget-summary>
@@ -9,4 +12,5 @@
       <app-expenses></app-expenses>
     </mat-accordion>
   </mat-card>
+  }
 </div>

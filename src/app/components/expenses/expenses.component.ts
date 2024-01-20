@@ -1,9 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ExpenseCategoryType } from '@Enums/category-type';
 import { BudgetDetails } from '@Models/budget-details';
-import { Expense } from '@Models/expense';
-import { MOCK_EXPENSE_DATA } from '@Models/expense-mock';
-import { BudgetDetailsService } from '@Services/budget-details.service';
+import { BudgetService } from '@Services/budget/budget.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -13,27 +11,21 @@ import { Subscription } from 'rxjs';
 })
 export class ExpensesComponent implements OnInit, OnDestroy {
   panelOpenState = false;
+  
   categoryTypes = ExpenseCategoryType;
-
-  expenseData: Expense[] = MOCK_EXPENSE_DATA;
-
-  totalExpense: number = this.expenseData.reduce(
-    (acc, expense) => acc + (expense.amount ? expense.amount : 0),
-    0
-  );
+ 
+  totalExpense: number = 0;
 
   private subscription!: Subscription;
 
-  constructor(private budgetDetailsService: BudgetDetailsService) {}
+  constructor(private budgetService: BudgetService) {}
 
   ngOnInit(): void {
-    this.subscription = this.budgetDetailsService
-      .getBudgetDetails()
-      .subscribe((budgetDetails) => {
-        if (budgetDetails) {
-          this.totalExpense = budgetDetails.totalExpenses;
-        }
-      });
+    this.subscription = this.budgetService.getBudgetDetails().subscribe({
+      next: (data: BudgetDetails) => {
+        this.totalExpense = data.totalExpenses;
+      },
+    });
   }
 
   ngOnDestroy(): void {

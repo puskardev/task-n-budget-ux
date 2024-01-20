@@ -1,5 +1,6 @@
 export interface Expense {
   expenseId: number;
+  budgetId?: number;
   name: string;
   amount: number | null;
   expenseType?: string;
@@ -14,7 +15,8 @@ export interface Expense {
 }
 
 export const emptyExpense: Expense = {
-  expenseId: 500,
+  expenseId: 0,
+  budgetId: 0,
   name: 'New Expense',
   expenseType: 'Fixed',
   amount: null,

@@ -1,4 +1,5 @@
-import { AuthService } from '@Services/auth.service';
+import { AuthService } from '@Services/auth/auth.service';
+import { StatusAlertService } from '@Services/status-alert/status-alert.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -11,7 +12,11 @@ export class MenuComponent implements OnInit {
   isSidenavOpen = false;
   isUserLoggedIn = false;
 
-  constructor(public authService: AuthService, private router: Router) {}
+  constructor(
+    public authService: AuthService,
+    private router: Router,
+    private statusAlertService: StatusAlertService
+  ) {}
 
   ngOnInit(): void {
     this.isUserLoggedIn = this.authService.isUserLoggedIn();
@@ -24,8 +29,13 @@ export class MenuComponent implements OnInit {
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
+    this.statusAlertService.openAlert(
+      'You have logged out successfully!',
+      'Close',
+      1000
+    );
   }
-  
+
   login() {
     this.router.navigate(['/login']);
   }

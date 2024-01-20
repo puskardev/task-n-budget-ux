@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDatepicker } from '@angular/material/datepicker';
 
@@ -28,7 +28,13 @@ import moment, { Moment } from 'moment';
   ],
 })
 export class MonthYearPickerComponent {
+  
+  @Output()
+  public dateChange = new EventEmitter<string>();
+
   date = new FormControl(moment());
+
+  constructor() {}
 
   setMonthAndYear(
     normalizedMonthAndYear: Moment,
@@ -38,6 +44,7 @@ export class MonthYearPickerComponent {
     ctrlValue.month(normalizedMonthAndYear.month());
     ctrlValue.year(normalizedMonthAndYear.year());
     this.date.setValue(ctrlValue);
+    this.dateChange.emit(ctrlValue.format('MMYYYY'));
     datepicker.close();
   }
 }

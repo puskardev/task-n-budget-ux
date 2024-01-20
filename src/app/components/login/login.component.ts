@@ -1,4 +1,6 @@
-import { AuthService } from '@Services/auth.service';
+import { AuthService } from '@Services/auth/auth.service';
+import { StatusAlertService } from '@Services/status-alert/status-alert.service';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -12,7 +14,13 @@ export class LoginComponent implements OnInit {
   password: string = '';
 
   hidePassword: boolean = true;
-  constructor(private authService: AuthService, private router: Router) {}
+  loginError: boolean = false;
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private statusAlertService: StatusAlertService
+  ) {}
 
   ngOnInit(): void {}
 
@@ -23,8 +31,20 @@ export class LoginComponent implements OnInit {
         next: (data) => {
           this.router.navigate(['home']);
         },
-        error: (error) => {
+        error: (error: HttpErrorResponse) => {
+          if (error.status === 404 || error.status === 401) {
+            // Set login error flag if unauthorized or not found
+            this.loginError = true;
+          } else {
+            this.statusAlertService.openAlert(
+              'Login Failed, Please try again.',
+              'Close'
+            );
+          }
           console.log(error);
+        },
+        complete: () => {
+          this.router.navigate(['home']);
         },
       });
   }

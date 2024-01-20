@@ -1,12 +1,10 @@
 import { passwordMatchValidator } from '@Constants/password-validator';
 import { User } from '@Models/user';
+import { AuthService } from '@Services/auth/auth.service';
+import { StatusAlertService } from '@Services/status-alert/status-alert.service';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  Validators
-} from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
@@ -34,10 +32,14 @@ export class RegisterComponent implements OnInit {
   registerComplete: boolean = false;
   registeredUser: string = 'pdev';
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private authService: AuthService,
+    private statusAlertService: StatusAlertService
+  ) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   getEmailErrorMessage() {
     return this.signupForm.get('email')?.hasError('email')
@@ -55,12 +57,16 @@ export class RegisterComponent implements OnInit {
         email: this.signupForm.get('email')?.value as string,
       };
 
-      this.http.post<User>('http://localhost:8080/register', user).subscribe({
+      this.authService.register(user).subscribe({
         next: (data: User) => {
           this.registerComplete = true;
           this.registeredUser = data.username;
         },
         error: (error) => {
+          this.statusAlertService.openAlert(
+            'Failed to register, Please try again later.',
+            'Close'
+          );
           console.log(error);
         },
       });

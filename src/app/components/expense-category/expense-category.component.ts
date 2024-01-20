@@ -1,14 +1,14 @@
 import {
-  EditExpenseComponent,
-  openEditExpenseDialog,
+  openEditExpenseDialog
 } from '@Components/edit-expense/edit-expense.component';
 import { ExpenseCategoryType } from '@Enums/category-type';
 import { PayType } from '@Enums/expense-enum';
 import { Expense, emptyExpense } from '@Models/expense';
-import { BudgetDetailsService } from '@Services/budget-details.service';
-import { DateService } from '@Services/date.service';
+import { BudgetService } from '@Services/budget/budget.service';
+import { DateService } from '@Services/date/date.service';
+import { StatusAlertService } from '@Services/status-alert/status-alert.service';
 import { Component, Input, OnInit } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { filter } from 'rxjs';
 
 @Component({
@@ -20,17 +20,9 @@ export class ExpenseCategoryComponent implements OnInit {
   @Input()
   categoryType!: ExpenseCategoryType;
 
-  @Input()
-  expenseData!: Expense[];
-
   categoryExpenseData: Expense[] = [];
 
-  public get totalExpense(): number {
-    return this.categoryExpenseData.reduce(
-      (acc, expense) => acc + (expense.amount ? expense.amount : 0),
-      0
-    );
-  }
+  categoryTotalExpense: number = 0;
 
   panelOpenState = false;
 
@@ -39,13 +31,56 @@ export class ExpenseCategoryComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private dateService: DateService,
-    private budgetDetailsService: BudgetDetailsService
+    public budgetService: BudgetService,
+    private statusAlertService: StatusAlertService
   ) {}
 
   ngOnInit() {
-    this.categoryExpenseData = this.expenseData.filter(
-      (item) => item.expenseCategoryType === this.categoryType
-    );
+    this.budgetService.getExpenseData().subscribe({
+      next: (data: Expense[]) => {
+        this.categoryExpenseData = data.filter(
+          (item: Expense) => item.expenseCategoryType === this.categoryType
+        );
+      },
+      error: (error) => {
+        this.statusAlertService.openAlert(
+          'Failed to load expense data',
+          'Close'
+        );
+        console.log(error);
+      },
+    });
+
+    this.budgetService.getBudgetDetails().subscribe({
+      next: (data) => {
+        switch (this.categoryType) {
+          case ExpenseCategoryType.Misc:
+            this.categoryTotalExpense = data.totalMiscExpenses;
+            break;
+          case ExpenseCategoryType.CreditCards:
+            this.categoryTotalExpense = data.totalCreditCardExpenses;
+            break;
+          case ExpenseCategoryType.Subscriptions:
+            this.categoryTotalExpense = data.totalSubscriptionExpenses;
+            break;
+          default:
+            break;
+        }
+      },
+    });
+  }
+
+  addExpense() {
+    const data: Expense = emptyExpense;
+    data.expenseCategoryType = this.categoryType;
+
+    openEditExpenseDialog(this.dialog, data)
+      .pipe(filter((val) => !!val))
+      .subscribe((res) => {
+        const expense: Expense = this.getExpense(res);
+
+        this.budgetService.addExpense(expense);
+      });
   }
 
   editExpense(data: Expense) {
@@ -53,23 +88,21 @@ export class ExpenseCategoryComponent implements OnInit {
       .pipe(filter((val) => !!val))
       .subscribe((val) => {
         if (val) {
-          console.log(val);
+          const expense: Expense = this.getExpense(val);
 
-          this.categoryExpenseData = this.categoryExpenseData.map((item: Expense) => {
-            if (item.expenseId === val.expenseId) {
-              return this.updatedExpense(val);
-            }
-            return item;
-          });
-
-          this.updateExpenseDetails();
+          this.budgetService.editExpense(expense);
         }
       });
   }
 
-  updatedExpense(data: any): Expense {
+  deleteExpense(data: Expense) {
+    this.budgetService.deleteExpense(data.expenseId);
+  }
+
+  getExpense(data: any): Expense {
     const expense: Expense = {
       expenseId: data.expenseId,
+      budgetId: this.budgetService.getBudgetId(),
       name: data.name,
       expenseType: data.expenseType,
       amount: Number(data.amount),
@@ -91,51 +124,6 @@ export class ExpenseCategoryComponent implements OnInit {
     } else {
       return null;
     }
-  }
-
-  addExpense() {
-    const data: Expense = emptyExpense;
-    data.expenseCategoryType = this.categoryType;
-
-    openEditExpenseDialog(this.dialog, data)
-      .pipe(filter((val) => !!val))
-      .subscribe((res) => {
-        //make API call to presisti - will return the expense ID as well.
-        // update expensesData
-        console.log(res);
-        const expense: Expense = this.updatedExpense(res);
-
-        this.categoryExpenseData.push(expense);
-
-        this.updateExpenseDetails();
-      });
-  }
-  updateExpenseDetails() {
-    this.budgetDetailsService.updateExpenseDetails(
-      this.categoryType,
-      this.totalExpense
-    );
-  }
-
-  deleteExpense(data: Expense) {
-    this.categoryExpenseData = this.expenseData.filter(
-      (item: Expense) => item.expenseId !== data.expenseId
-    );
-
-    this.updateExpenseDetails();
-  }
-
-  saveExpense(expense: Expense) {}
-
-  openDialog(config: MatDialogConfig) {
-    const dialogRef = this.dialog.open(EditExpenseComponent, config);
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        console.log('Sav clicked');
-      }
-      console.log(`Dialog result: ${result}`);
-    });
   }
 
   getCategoryClass() {
